@@ -55,7 +55,6 @@ class LinkedList:
             return "F"
 
 
-# Example usage
 if __name__ == "__main__":
     student_list = LinkedList()
 
