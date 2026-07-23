@@ -10,6 +10,6 @@ for k in b_tree_node:
         break
 
 if found: 
-    print("Output; \n Entered element (key) found in the B-Tree node!")
+    print("Entered element (key) found in the B-Tree node!")
 else: 
-    print("Output; \n Entered element (key) is not found in the B-Tree node!")
+    print("Entered element (key) is not found in the B-Tree node!")
