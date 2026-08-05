@@ -1,92 +1,176 @@
-# DAA Lab Experiments & Algorithms
+# DAA Lab — Advanced Data Structures & Algorithms
 
-This directory (`daalab`) contains Python implementations for Advanced Data Structures and Algorithms covered in Design and Analysis of Algorithms (DAA) Lab.
-
----
-
-## Directory Overview
-
-| Experiment File | Description | Core Operations |
-|---|---|---|
-| [`exp1.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp1.py) | **B-Tree Operations & Full Implementation** | Node Search, Node Insertion, Node Deletion, Tree Splitting & Insertion |
-| [`exp2.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp2.py) | **Binomial Heap Implementation** | Insertion, Get Min, Extract Min, Union / Tree Merging, Display |
-| [`exp3.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp3.py) | **Fibonacci Heap Implementation** | Insertion, Find Min, Extract Min (Consolidate), Decrease Key, Cascading Cut |
+Comprehensive Python implementations, algorithmic explanations, step-by-step operation breakdowns, complexity analysis, and viva questions for the Design and Analysis of Algorithms (DAA) Laboratory repository (`daalab`).
 
 ---
 
-## Experiment Details
+## Table of Contents
 
-### Experiment 1: B-Tree Operations & Full Implementation (`exp1.py`)
-
-#### Parts Included
-1. **Part 1: B-Tree Node Search** — Linear key search within a sorted array representation of a B-Tree node ($O(n)$).
-2. **Part 2: B-Tree Node Insertion** — Inserting a new key into a single sorted B-Tree node while preserving sorted order ($O(n)$).
-3. **Part 3: B-Tree Node Deletion** — Searching and deleting a key from a sorted node list via `pop()` ($O(n)$).
-4. **Part 4: Full B-Tree Implementation** — Complete dynamic B-Tree class (`BTree`, `BTreeNode`) supporting insertion, node splitting, and hierarchical level-order tree traversal ($O(\log n)$ search/insertion).
-
----
-
-### Experiment 2: Binomial Heap (`exp2.py`)
-
-#### Overview
-A **Binomial Heap** is a collection of Binomial Trees satisfying the min-heap property, where each degree occurs at most once. It provides efficient heap union operations ($O(\log n)$).
-
-#### Key Components
-- **`BinomialNode`**: Stores `key`, `degree`, `parent`, `child` (leftmost child), and `sibling` (next sibling).
-- **`BinomialHeap`**: Main heap class managing root lists and operations.
-
-#### Core Operations & Time Complexities
-- **Merge Trees (`merge_trees`)**: Links two binomial trees of degree $k$ to form a tree of degree $k+1$ in $O(1)$ time.
-- **Union (`union`)**: Merges two binomial heap root lists and combines trees of equal degrees in $O(\log n)$ time.
-- **Insert (`insert`)**: Creates a single-node heap and calls `union()` in $O(\log n)$ time (amortized $O(1)$).
-- **Find Minimum (`get_min`)**: Traverses the root list in $O(\log n)$ time.
-- **Extract Minimum (`extract_min`)**: Removes the root with the minimum key, reverses its child list, and performs a `union()` in $O(\log n)$ time.
+- [Directory Structure & Quick Reference](#directory-structure--quick-reference)
+- [Experiment 1: B-Tree Operations & Implementation](#experiment-1-b-tree-operations--implementation)
+- [Experiment 2: Binomial Heap Implementation](#experiment-2-binomial-heap-implementation)
+- [Experiment 3: Fibonacci Heap Implementation](#experiment-3-fibonacci-heap-implementation)
+- [Experiment 4: Red-Black Tree Implementation](#experiment-4-red-black-tree-implementation)
+- [Comprehensive Time & Space Complexity Matrix](#comprehensive-time--space-complexity-matrix)
+- [Viva Questions & Answers](#viva-questions--answers)
 
 ---
 
-### Experiment 3: Fibonacci Heap (`exp3.py`)
+## Directory Structure & Quick Reference
 
-#### Overview
-A **Fibonacci Heap** is a data structure for priority queue operations consisting of a collection of heap-ordered trees. It offers faster amortized running times than Binary or Binomial heaps, especially for `decrease_key`.
-
-#### Key Components
-- **`FibonacciNode`**: Stores `key`, `degree`, `mark` (boolean for cascading cut), `parent`, `child`, `left`, and `right` (circular doubly linked list pointers).
-- **`FibonacciHeap`**: Heap structure maintaining `min_node` pointer and `total_nodes` count.
-
-#### Core Operations & Time Complexities
-- **Insert (`insert`)**: Adds a new node to the root circular list in $O(1)$ amortized time.
-- **Find Minimum (`find_min`)**: Returns `min_node.key` in $O(1)$ time.
-- **Extract Minimum (`extract_min`)**: Removes `min_node`, adds its children to the root list, and calls `consolidate()` to combine roots of equal degrees in $O(\log n)$ amortized time.
-- **Consolidate (`consolidate`)**: Groups root nodes by degree using a degree table.
-- **Decrease Key (`decrease_key`)**: Decreases a node's key value. Performs `cut()` and `cascading_cut()` if heap order is violated, bringing amortized time complexity to $O(1)$.
+| File | Structure / Topic | Primary Operations Covered | Time Complexity (Primary) |
+|---|---|---|---|
+| [`exp1.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp1.py) | **B-Tree** | Linear Search, Node Insert, Node Delete, Splitting & Insertion | $O(\log_t n)$ search / insert |
+| [`exp2.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp2.py) | **Binomial Heap** | `insert`, `get_min`, `extract_min`, `union`, `merge_trees` | $O(\log n)$ insert / extract-min |
+| [`exp3.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp3.py) | **Fibonacci Heap** | `insert`, `find_min`, `extract_min`, `consolidate`, `decrease_key`, `cut` | $O(1)$ amortized insert & decrease-key |
+| [`exp4.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp4.py) | **Red-Black Tree** | `insert`, `fix_insert`, `left_rotate`, `right_rotate`, `search`, `inorder` | $O(\log n)$ search / insert |
 
 ---
 
-## Summary of Time & Space Complexities
+## Experiment 1: B-Tree Operations & Implementation
 
-| Data Structure | Search / Get Min | Insert | Extract Min | Decrease Key | Union / Merge | Space |
+**Source File:** [`exp1.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp1.py)
+
+### Overview
+A **B-Tree** is a self-balancing search tree designed to work efficiently on secondary storage (disks). Unlike binary search trees, B-Tree nodes can store multiple keys and have more than two child pointers.
+
+### Parts Breakdown
+
+#### Part 1: B-Tree Node Search (`b_tree_node = [10, 20, 30, 40, 50]`)
+- Performs a linear lookup of a key within a simulated single node.
+- Complexity: $O(n)$ where $n$ is the number of keys in the node.
+
+#### Part 2: B-Tree Node Insertion
+- Finds the first position where `key < node[i]` and inserts the key using `list.insert(i, key)`, maintaining sorted order.
+- If key is greater than all existing elements, it appends to the end.
+
+#### Part 3: B-Tree Node Deletion
+- Locates the key within the array and removes it using `list.pop(i)`, shifting trailing keys to keep the node compact and sorted.
+
+#### Part 4: Full B-Tree Class Implementation (`BTree`, `BTreeNode`)
+- **Node Structure (`BTreeNode`)**: `key` array, `child` array of node references, `leaf` boolean flag.
+- **Minimum Degree ($t$)**: Every non-root node must contain at least $t-1$ keys and at most $2t-1$ keys.
+- **Child Splitting (`split_child`)**: When a child node overflows ($2t-1$ keys), it is split around its median key (index $t-1$), promoting the median to the parent.
+- **Recursive Non-Full Insertion (`insert_non_full`)**: Descends the tree, preemptively splitting full nodes along the path to ensure insertion always succeeds at the leaf level.
+
+```
+Example B-Tree Structure (t=3):
+               [3]
+             /     \
+      [0, 1]         [4, 5]   [7, 8]
+```
+
+---
+
+## Experiment 2: Binomial Heap Implementation
+
+**Source File:** [`exp2.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp2.py)
+
+### Overview
+A **Binomial Heap** is a collection of **Binomial Trees** $B_0, B_1, B_2, \dots, B_k$ satisfying:
+1. Every binomial tree in the heap obeys the **min-heap property**.
+2. There is at most **one** binomial tree of any given degree.
+
+### Key Operations & Algorithms
+
+1. **Tree Link / Merge (`merge_trees(tree1, tree2)`)**:
+   - Given two trees of degree $k$, the tree with the smaller root becomes the parent of the other tree, forming a tree of degree $k+1$ in $O(1)$ time.
+2. **Heap Union (`union(other_head)`)**:
+   - Merges root lists sorted by degree (`merge_heap`), then iterates through to combine trees of duplicate degree.
+3. **Insertion (`insert(key)`)**:
+   - Constructs a single-node binomial heap $B_0$ and unions it with the current heap in $O(\log n)$ time.
+4. **Extract Minimum (`extract_min()`)**:
+   - Finds the minimum root node, removes it from the root list, reverses its children to form a valid root list, and performs `union()` with the remaining heap.
+
+```
+Binomial Tree Degrees:
+B0: (1 node)    B1: (2 nodes)     B2: (4 nodes)
+   o               o                 o
+                  /                 / \
+                 o                 o   o
+                                  /
+                                 o
+```
+
+---
+
+## Experiment 3: Fibonacci Heap Implementation
+
+**Source File:** [`exp3.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp3.py)
+
+### Overview
+A **Fibonacci Heap** is a loose collection of heap-ordered trees using circular doubly linked lists. It defers structural consolidation until `extract_min()`, providing $O(1)$ amortized running time for `insert`, `find_min`, and `decrease_key`.
+
+### Key Mechanics
+
+1. **Circular Doubly Linked Lists**:
+   - Node attributes `left` and `right` allow constant-time $O(1)$ splicing of nodes into and out of root/child lists.
+2. **Lazy Insertion**:
+   - New keys are simply attached to the root circular list; no tree restructuring occurs immediately.
+3. **Consolidation (`consolidate()`)**:
+   - Executed during `extract_min()`. Uses an array/hash table keyed by tree degree to link trees of equal degrees until all root trees have distinct degrees.
+4. **Cut & Cascading Cut (`cut`, `cascading_cut`)**:
+   - **`cut`**: Detaches a modified node from its parent (when its key decreases below parent's key) and moves it to the root list.
+   - **`cascading_cut`**: If a parent has already lost a child (`mark == True`), it is also cut and moved to the root list, propagating recursively upwards. This maintains bounding properties necessary for logarithmic height.
+
+---
+
+## Experiment 4: Red-Black Tree Implementation
+
+**Source File:** [`exp4.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp4.py)
+
+### Overview
+A **Red-Black Tree** is a self-balancing binary search tree where every node contains an extra color bit (`RED` or `BLACK`). It guarantees that no path from root to leaf is more than twice as long as any other path.
+
+### 5 Invariant Rules
+1. Every node is either **RED** or **BLACK**.
+2. The root is always **BLACK**.
+3. Every leaf (`NIL`) is **BLACK**.
+4. If a node is **RED**, both its children must be **BLACK** (no two adjacent RED nodes).
+5. For each node, all simple paths from the node to descendant leaves contain the same number of **BLACK** nodes (Black-Height).
+
+### Insertion Fixup Cases (`fix_insert`)
+
+When inserting a node (always colored `RED` initially), potential red-red violations are resolved based on the uncle's color:
+
+- **Case 1 (Uncle is RED)**:
+  - Recolor parent and uncle to `BLACK`, grandparent to `RED`. Move pointer $k$ to grandparent.
+- **Case 2 (Uncle is BLACK, $k$ is inner child - Zig-Zag)**:
+  - Apply `left_rotate` (or `right_rotate`) on parent to transform into Case 3.
+- **Case 3 (Uncle is BLACK, $k$ is outer child - Zig-Zig)**:
+  - Recolor parent to `BLACK`, grandparent to `RED`, then perform rotation (`right_rotate` / `left_rotate`) on grandparent.
+
+---
+
+## Comprehensive Time & Space Complexity Matrix
+
+| Structure / Algorithm | Search / Find Min | Insert (Worst Case) | Insert (Amortized) | Extract Min / Delete | Decrease Key | Space Complexity |
 |---|---|---|---|---|---|---|
-| **B-Tree** | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | N/A | N/A | $O(n)$ |
-| **Binomial Heap** | $O(\log n)$ | $O(\log n)$ / $O(1)$ amortized | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(n)$ |
-| **Fibonacci Heap** | $O(1)$ | $O(1)$ amortized | $O(\log n)$ amortized | $O(1)$ amortized | $O(1)$ | $O(n)$ |
+| **B-Tree ($t$)** | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | N/A | $O(n)$ |
+| **Binomial Heap** | $O(\log n)$ | $O(\log n)$ | $O(1)$ | $O(\log n)$ | $O(\log n)$ | $O(n)$ |
+| **Fibonacci Heap** | $O(1)$ | $O(1)$ | $O(1)$ | $O(\log n)$ amortized | $O(1)$ amortized | $O(n)$ |
+| **Red-Black Tree** | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | N/A | $O(n)$ |
 
 ---
 
 ## Viva Questions & Answers
 
-### Q1: What is a B-Tree and why is it used?
-A **B-Tree** is a self-balancing search tree where nodes can contain multiple keys and more than two children. It is primarily used in **databases and file systems** to minimize disk I/O operations because each node fits into a single block/page.
+### Q1: What makes B-Trees ideal for File Systems and Database Systems?
+B-Trees have large branching factors (high degree $t$). This keeps the height of the tree small, minimizing the number of disk accesses required to find a record. Entire B-Tree nodes can be aligned with disk block sizes.
 
-### Q2: What is the main structural difference between Binomial Heap and Fibonacci Heap?
-- **Binomial Heap**: A strictly structured collection of binomial trees where roots are kept sorted by degree, and degree conflicts are resolved immediately during union/insertion operations.
-- **Fibonacci Heap**: A lazy data structure using circular doubly linked lists for roots and children. It defers tree consolidation until `extract_min()`, enabling $O(1)$ amortized insertion and `decrease_key`.
+### Q2: Why are new nodes in a Red-Black Tree always inserted as RED?
+Inserting a RED node preserves Rule 5 (Black-Height invariant) across all paths. Inserting a BLACK node would immediately violate black-height on that branch and require complex global updates.
 
-### Q3: Why is `decrease_key` faster in Fibonacci Heap compared to Binomial Heap?
-In a Binomial Heap, decreasing a key requires bubble-up traversal along parent pointers, taking $O(\log n)$ time. In a Fibonacci Heap, if decreasing a key breaks the min-heap order, the node is simply **cut** from its parent and moved to the root list in $O(1)$ time. **Cascading cuts** ensure trees do not become overly unbalanced.
+### Q3: What is the purpose of the `mark` field in Fibonacci Heap nodes?
+The `mark` boolean indicates whether a node has lost a child since it became a child of its current parent. It triggers a **cascading cut** when a second child is lost, preventing trees from becoming excessively deep and preserving $O(1)$ amortized efficiency.
 
-### Q4: How does tree consolidation work during `extract_min` in Fibonacci Heap?
-After removing the minimum node, all its children are merged into the root list. Then, `consolidate()` uses a degree lookup table to continuously link any two root trees that share the exact same degree until every root in the heap has a unique degree.
+### Q4: How does `union` differ between Binomial Heap and Fibonacci Heap?
+- **Binomial Heap**: $O(\log n)$ — merges two root lists sorted by degree and immediately combines trees of equal degree.
+- **Fibonacci Heap**: $O(1)$ — simply concatenates two circular doubly linked root lists without combining any trees.
+
+### Q5: What is the maximum height of a Red-Black Tree with $n$ internal nodes?
+The maximum height is $2 \log_2(n + 1)$, guaranteeing strict $O(\log n)$ bounds for search, insert, and delete operations.
 
 ---
 
-*Prepared for DAA Lab Experiments 1 (B-Tree), 2 (Binomial Heap), and 3 (Fibonacci Heap)*
+*Prepared for DAA Laboratory — Unit Experiments 1–4*
