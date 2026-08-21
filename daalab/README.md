@@ -11,6 +11,7 @@ Comprehensive Python implementations, algorithmic explanations, step-by-step ope
 - [Experiment 2: Binomial Heap Implementation](#experiment-2-binomial-heap-implementation)
 - [Experiment 3: Fibonacci Heap Implementation](#experiment-3-fibonacci-heap-implementation)
 - [Experiment 4: Red-Black Tree Implementation](#experiment-4-red-black-tree-implementation)
+- [Experiment 5: Greedy Algorithms](#experiment-5-greedy-algorithms)
 - [Comprehensive Time & Space Complexity Matrix](#comprehensive-time--space-complexity-matrix)
 - [Viva Questions & Answers](#viva-questions--answers)
 
@@ -24,6 +25,7 @@ Comprehensive Python implementations, algorithmic explanations, step-by-step ope
 | [`exp2.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp2.py) | **Binomial Heap** | `insert`, `get_min`, `extract_min`, `union`, `merge_trees` | $O(\log n)$ insert / extract-min |
 | [`exp3.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp3.py) | **Fibonacci Heap** | `insert`, `find_min`, `extract_min`, `consolidate`, `decrease_key`, `cut` | $O(1)$ amortized insert & decrease-key |
 | [`exp4.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp4.py) | **Red-Black Tree** | `insert`, `fix_insert`, `left_rotate`, `right_rotate`, `search`, `inorder` | $O(\log n)$ search / insert |
+| [`exp5.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp5.py) | **Greedy Algorithms** | Fractional Knapsack, Activity Selection, Huffman Coding | $O(n \log n)$ sorting / heap building |
 
 ---
 
@@ -142,35 +144,96 @@ When inserting a node (always colored `RED` initially), potential red-red violat
 
 ---
 
+## Experiment 5: Greedy Algorithms
+
+**Source File:** [`exp5.py`](file:///Users/imadmac/school/code/Uni_Labs/daalab/exp5.py)
+
+### Overview
+Greedy algorithms construct solutions piece by piece, always choosing the next piece that offers the most immediate (locally optimal) benefit, aiming to find a global optimum.
+
+---
+
+### 5(a) — Part 1: Fractional Knapsack Problem
+
+- **Strategy**: Calculate the **profit-to-weight ratio** ($P_i / W_i$) for each item and sort items in descending order of ratio.
+- **Greedy Choice**: Take as much of the item with the highest value density as possible. If the remaining capacity cannot take the whole item, take the fractional portion.
+- **Time Complexity**: $O(n \log n)$ due to sorting $n$ items.
+
+```
+Given: Capacity W = 50, Items: (w, p) = [(10, 60), (20, 100), (30, 120)]
+Ratios: [6.0, 5.0, 4.0]
+Selection: Item 1 (full: 10w, 60p) + Item 2 (full: 20w, 100p) + Item 3 (20/30 frac: 20w, 80p)
+Total Profit = 240.0
+```
+
+---
+
+### 5(a) — Part 2: Activity Selection Problem
+
+- **Strategy**: Given start times $S$ and finish times $F$ for $n$ activities, select the maximum number of mutually compatible activities.
+- **Greedy Choice**: Sort activities by **finish time** in ascending order. Always pick the activity with the earliest finish time that starts after or when the previous activity ends.
+- **Time Complexity**: $O(n \log n)$ for sorting finish times ($O(n)$ if already sorted).
+
+```
+Activities (Finish, Start): [(2, 1), (4, 3), (6, 0), (7, 5), (9, 8), (9, 5)]
+Selected: Activity 1 [1-2], Activity 2 [3-4], Activity 4 [5-7], Activity 5 [8-9]
+Maximum Activities = 4
+```
+
+---
+
+### 5(b) — Huffman Coding & Complexity Analysis
+
+- **Strategy**: A lossless data compression algorithm that assigns variable-length prefix codes to characters based on their frequencies.
+- **Greedy Choice**: Use a **Min-Heap (Priority Queue)**. Repeatedly extract the two nodes with the lowest frequencies, combine them into an internal parent node with frequency sum, and insert the parent back into the heap.
+- **Prefix Property**: No code is a prefix of another code, ensuring unambiguous decoding.
+
+#### Time & Space Complexity Analysis:
+- **Building the Min-Heap**: $O(n)$
+- **Extracting minimums & inserting ($n-1$ iterations)**: Each step takes $O(\log n)$, so tree construction takes $O(n \log n)$.
+- **Generating Codes (Tree Traversal)**: $O(n)$
+- **Overall Time Complexity**: $O(n \log n)$
+- **Auxiliary Space Complexity**: $O(n)$ to store tree nodes and heap.
+
+---
+
 ## Comprehensive Time & Space Complexity Matrix
 
-| Structure / Algorithm | Search / Find Min | Insert (Worst Case) | Insert (Amortized) | Extract Min / Delete | Decrease Key | Space Complexity |
+| Structure / Algorithm | Search / Find Min | Insert (Worst Case) | Insert (Amortized) | Extract Min / Delete | Overall Time Complexity | Space Complexity |
 |---|---|---|---|---|---|---|
-| **B-Tree ($t$)** | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | N/A | $O(n)$ |
+| **B-Tree ($t$)** | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(n)$ |
 | **Binomial Heap** | $O(\log n)$ | $O(\log n)$ | $O(1)$ | $O(\log n)$ | $O(\log n)$ | $O(n)$ |
 | **Fibonacci Heap** | $O(1)$ | $O(1)$ | $O(1)$ | $O(\log n)$ amortized | $O(1)$ amortized | $O(n)$ |
-| **Red-Black Tree** | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | N/A | $O(n)$ |
+| **Red-Black Tree** | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(n)$ |
+| **Fractional Knapsack** | N/A | N/A | N/A | N/A | $O(n \log n)$ | $O(n)$ |
+| **Activity Selection** | N/A | N/A | N/A | N/A | $O(n \log n)$ | $O(n)$ |
+| **Huffman Coding** | N/A | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(n \log n)$ | $O(n)$ |
 
 ---
 
 ## Viva Questions & Answers
 
-### Q1: What makes B-Trees ideal for File Systems and Database Systems?
+### Q1: Why does Greedy work for Fractional Knapsack but fail for 0/1 Knapsack?
+Fractional Knapsack allows breaking items; taking the item with the highest profit density ($P/W$) leaves the remaining capacity optimal. In 0/1 Knapsack, taking a high-density item might leave empty space that cannot be filled, so Dynamic Programming is required.
+
+### Q2: Why must activities be sorted by finish time rather than start time or duration?
+Sorting by earliest finish time leaves the maximum possible remaining time for subsequent activities. Sorting by start time or duration can block longer optimal activity schedules.
+
+### Q3: What is the Prefix Rule in Huffman Coding and why is it crucial?
+The prefix rule states that no character's codeword can be a prefix of another character's codeword. This enables unambiguous left-to-right decoding without separators/delimiters.
+
+### Q4: What is the time complexity of Huffman Coding if characters are already sorted by frequency?
+If frequencies are pre-sorted, we can maintain two standard queues (one for initial leaf nodes and one for combined internal nodes), allowing tree construction in linear $O(n)$ time.
+
+### Q5: What makes B-Trees ideal for File Systems and Database Systems?
 B-Trees have large branching factors (high degree $t$). This keeps the height of the tree small, minimizing the number of disk accesses required to find a record. Entire B-Tree nodes can be aligned with disk block sizes.
 
-### Q2: Why are new nodes in a Red-Black Tree always inserted as RED?
+### Q6: Why are new nodes in a Red-Black Tree always inserted as RED?
 Inserting a RED node preserves Rule 5 (Black-Height invariant) across all paths. Inserting a BLACK node would immediately violate black-height on that branch and require complex global updates.
 
-### Q3: What is the purpose of the `mark` field in Fibonacci Heap nodes?
+### Q7: What is the purpose of the `mark` field in Fibonacci Heap nodes?
 The `mark` boolean indicates whether a node has lost a child since it became a child of its current parent. It triggers a **cascading cut** when a second child is lost, preventing trees from becoming excessively deep and preserving $O(1)$ amortized efficiency.
-
-### Q4: How does `union` differ between Binomial Heap and Fibonacci Heap?
-- **Binomial Heap**: $O(\log n)$ — merges two root lists sorted by degree and immediately combines trees of equal degree.
-- **Fibonacci Heap**: $O(1)$ — simply concatenates two circular doubly linked root lists without combining any trees.
-
-### Q5: What is the maximum height of a Red-Black Tree with $n$ internal nodes?
-The maximum height is $2 \log_2(n + 1)$, guaranteeing strict $O(\log n)$ bounds for search, insert, and delete operations.
 
 ---
 
-*Prepared for DAA Laboratory — Unit Experiments 1–4*
+*Prepared for DAA Laboratory — Unit Experiments 1–5*
